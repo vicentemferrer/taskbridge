@@ -1,0 +1,65 @@
+.taskCard {
+	background-color: white;
+	border: 1px solid #eee;
+	border-radius: 8px;
+	padding: 1.5rem;
+	margin-bottom: 1rem;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.taskHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.taskTitle {
+	font-size: 1.25rem;
+	font-weight: bold;
+	margin: 0;
+}
+
+.taskStatus {
+	padding: 0.3rem 0.6rem;
+	border-radius: 4px;
+	font-size: 0.8rem;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+
+.statusPending {
+	background-color: var(--color-secondary);
+	color: var(--color-text);
+}
+
+.statusInProgress {
+	background-color: var(--color-details);
+	color: white;
+}
+
+.statusDone {
+	background-color: var(--color-primary);
+	color: white;
+}
+
+.taskDescription {
+	font-size: 0.95rem;
+	color: #555;
+}
+
+.taskMeta {
+	font-size: 0.85rem;
+	color: #777;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.taskMeta svg {
+	width: 1rem;
+	height: 1rem;
+	color: var(--color-details);
+}

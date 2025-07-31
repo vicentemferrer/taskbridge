@@ -1,0 +1,12 @@
+.homeContainer {
+	padding: 2rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.homeContainer h2 {
+	text-align: center;
+	color: var(--color-text);
+	margin-bottom: 2rem;
+	font-size: 2.5rem;
+}
