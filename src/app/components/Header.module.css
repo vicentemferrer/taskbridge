@@ -13,6 +13,12 @@
 	font-size: 1.8rem;
 }
 
+.header form {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
 .header a {
 	color: white;
 	font-weight: bold;

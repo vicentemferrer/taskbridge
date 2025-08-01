@@ -1,65 +1,62 @@
 'use client';
 
-import type { FormEvent } from 'react';
-
-import { useState } from 'react';
+import { useActionState, useEffect } from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+
+import { signupAction } from '@/app/lib/auth';
 
 import styles from '../styles/AuthForm.module.css';
 
 export default function SignUpPage() {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
+	const [state, formAction, isPending] = useActionState(signupAction, {
+		success: false,
+		errors: {},
+		message: ''
+	});
 
-	const handleSubmit = (e: FormEvent) => {
-		e.preventDefault();
-		if (password !== confirmPassword) {
-			alert('Passwords do not match!');
-			return;
+	useEffect(() => {
+		if (state.success) {
+			redirect('/');
 		}
-
-		console.log('Sign Up attempt:', { email, password });
-		alert('Sign Up functionality not yet implemented. Check console for data.');
-	};
+	}, [state]);
 
 	return (
 		<div className={styles.authContainer}>
 			<div className={styles.authCard}>
 				<h2>Sign Up</h2>
-				<form onSubmit={handleSubmit} className={styles.form}>
+				{state.message && (
+					<p style={{ color: state.success ? 'green' : 'red', textAlign: 'center' }}>
+						{state.message}
+					</p>
+				)}
+				<form action={formAction} className={styles.form}>
 					<div className={styles.formGroup}>
 						<label htmlFor='email'>Email</label>
-						<input
-							type='email'
-							id='email'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							required
-						/>
+						<input type='email' id='email' name='email' required />
+						{state.errors?.email && <p className={styles.errorMessage}>{state.errors.email}</p>}
+					</div>
+					<div className={styles.formGroup}>
+						<label htmlFor='nick'>Nick</label>
+						<input type='text' id='nick' name='nick' required />
+						{state.errors?.nick && <p className={styles.errorMessage}>{state.errors.nick}</p>}
 					</div>
 					<div className={styles.formGroup}>
 						<label htmlFor='password'>Password</label>
-						<input
-							type='password'
-							id='password'
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
-						/>
+						<input type='password' id='password' name='password' required />
+						{state.errors?.password && (
+							<p className={styles.errorMessage}>{state.errors.password}</p>
+						)}
 					</div>
 					<div className={styles.formGroup}>
 						<label htmlFor='confirmPassword'>Confirm Password</label>
-						<input
-							type='password'
-							id='confirmPassword'
-							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
-							required
-						/>
+						<input type='password' id='confirmPassword' name='confirmPassword' required />
+						{state.errors?.confirmPassword && (
+							<p className={styles.errorMessage}>{state.errors.confirmPassword}</p>
+						)}
 					</div>
-					<button type='submit' className={styles.submitButton}>
-						Sign Up
+					<button type='submit' className={styles.submitButton} disabled={isPending}>
+						{isPending ? 'Signing up...' : 'Sign Up'}
 					</button>
 				</form>
 				<p className={styles.linkText}>
