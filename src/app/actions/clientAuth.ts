@@ -6,8 +6,9 @@ import {
 import { FirebaseError } from 'firebase/app';
 
 import { auth } from '../lib/firebase';
-import { loginSchema, signupSchema } from '@/app/lib/schemas';
 import { createSession } from './adminAuth';
+
+import { loginSchema, signupSchema } from '@/app/lib/schemas';
 
 type FormState = {
 	success: boolean;

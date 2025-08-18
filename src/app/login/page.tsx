@@ -1,7 +1,8 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { loginUser } from '@/app/actions/clientAuth';
 
@@ -13,6 +14,12 @@ export default function LoginPage() {
 		errors: {},
 		message: ''
 	});
+
+	useEffect(() => {
+		if (state.success) {
+			redirect('/');
+		}
+	}, [state]);
 
 	return (
 		<div className={styles.authContainer}>

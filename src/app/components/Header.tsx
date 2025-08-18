@@ -1,13 +1,12 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { signOut } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 
-//import { logoutUser } from '../actions/clientAuth';
+import { auth } from '../lib/firebase';
 import { collapseSession, getUserFromSession } from '../actions/adminAuth';
 
 import styles from './Header.module.css';
-import { signOut } from 'firebase/auth';
-import { FirebaseError } from 'firebase/app';
-import { auth } from '../lib/firebase';
-import { redirect } from 'next/navigation';
 
 export default async function Header() {
 	const user = await getUserFromSession();
@@ -23,6 +22,8 @@ export default async function Header() {
 				console.error(`signup failed: ${err.message}`);
 			}
 		}
+
+		redirect('/login');
 	}
 
 	return (

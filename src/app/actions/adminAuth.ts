@@ -1,9 +1,9 @@
 'use server';
 
-import { FirebaseError } from 'firebase/app';
+import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { cookies, headers } from 'next/headers';
+
+import { FirebaseError } from 'firebase/app';
 
 import { auth } from '@/app/lib/firebaseAdmin';
 
@@ -38,30 +38,18 @@ export async function createSession({ token, path }: { token: string; path: stri
 	}
 
 	revalidatePath(path);
-	redirect('/');
 }
 
 export async function collapseSession() {
-	const headersList = await headers();
 	const cookieStore = await cookies();
 
 	try {
 		cookieStore.delete('session');
 	} catch (err) {
 		if (err instanceof Error) {
-			console.error('collappseSession failed');
+			console.error('collapseSession failed');
 			throw new Error(err.message);
 		}
-	}
-
-	const referer = headersList.get('referer');
-
-	if (referer) {
-		const url = new URL(referer);
-		const pathname = url.pathname;
-
-		revalidatePath(pathname);
-		redirect('/');
 	}
 }
 

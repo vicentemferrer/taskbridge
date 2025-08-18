@@ -6,8 +6,6 @@ import type { Task, TimestampMock } from './lib/types';
 import TaskList from './components/TaskList';
 
 import styles from './styles/Home.module.css';
-import { getUserFromSession } from './actions/adminAuth';
-import { redirect } from 'next/navigation';
 
 const mockTimestamp = (date: Date): TimestampMock => ({
 	toDate: () => date
@@ -76,10 +74,6 @@ const sampleTasks: Task[] = [
 ];
 
 export default async function HomePage() {
-	const user = await getUserFromSession();
-
-	if (!user) redirect('/login');
-
 	return (
 		<div className={styles.homeContainer}>
 			<div className={styles.listHeader}>

@@ -7,7 +7,6 @@ import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { createTaskAction } from '@/app/actions/tasks';
 
 import styles from '@/app/styles/NewTaskForm.module.css';
-import { auth } from '@/app/lib/firebase';
 
 type State = Awaited<ReturnType<typeof createTaskAction>>;
 
@@ -17,8 +16,6 @@ export default function NewTaskPage() {
 		errors: {},
 		message: ''
 	});
-
-	console.log(auth.currentUser);
 
 	return (
 		<div className={styles.container}>
