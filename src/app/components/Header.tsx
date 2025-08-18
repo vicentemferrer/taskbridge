@@ -1,12 +1,29 @@
 import Link from 'next/link';
 
-import { auth } from '../lib/firebase';
-import { logoutAction } from '../lib/auth';
+//import { logoutUser } from '../actions/clientAuth';
+import { collapseSession, getUserFromSession } from '../actions/adminAuth';
 
 import styles from './Header.module.css';
+import { signOut } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
+import { auth } from '../lib/firebase';
+import { redirect } from 'next/navigation';
 
-export default function Header() {
-	const user = auth.currentUser;
+export default async function Header() {
+	const user = await getUserFromSession();
+
+	async function logoutUser(formData: FormData) {
+		'use server';
+
+		try {
+			await signOut(auth);
+			await collapseSession();
+		} catch (err) {
+			if (err instanceof Error || err instanceof FirebaseError) {
+				console.error(`signup failed: ${err.message}`);
+			}
+		}
+	}
 
 	return (
 		<header className={styles.header}>
@@ -15,8 +32,8 @@ export default function Header() {
 			</Link>
 			<nav>
 				{user && (
-					<form action={logoutAction}>
-						<h3>Welcome, {user.displayName}!</h3>
+					<form action={logoutUser}>
+						<h3>Welcome, {user.name}!</h3>
 						<button className='button'>Logout</button>
 					</form>
 				)}

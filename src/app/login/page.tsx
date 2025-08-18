@@ -1,25 +1,18 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState } from 'react';
 import Link from 'next/link';
 
-import { loginAction } from '@/app/lib/auth';
+import { loginUser } from '@/app/actions/clientAuth';
 
 import styles from '../styles/AuthForm.module.css';
-import { redirect } from 'next/navigation';
 
 export default function LoginPage() {
-	const [state, formAction, isPending] = useActionState(loginAction, {
+	const [state, formAction, isPending] = useActionState(loginUser, {
 		success: false,
 		errors: {},
 		message: ''
 	});
-
-	useEffect(() => {
-		if (state.success) {
-			redirect('/');
-		}
-	}, [state]);
 
 	return (
 		<div className={styles.authContainer}>
@@ -42,6 +35,10 @@ export default function LoginPage() {
 						{state.errors?.password && (
 							<p className={styles.errorMessage}>{state.errors.password}</p>
 						)}
+					</div>
+					<div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
+						<input type='checkbox' id='rememberMe' name='rememberMe' />
+						<label htmlFor='rememberMe'>Recordarme</label>
 					</div>
 					<button type='submit' className={styles.submitButton} disabled={isPending}>
 						{isPending ? 'Logging in...' : 'Login'}

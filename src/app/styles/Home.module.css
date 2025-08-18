@@ -4,9 +4,19 @@
 	margin: 0 auto;
 }
 
-.homeContainer h2 {
-	text-align: center;
-	color: var(--color-text);
+.listHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	margin-bottom: 2rem;
+
+	& a {
+		display: flex;
+		gap: 0.5rem;
+	}
+}
+
+.homeContainer h2 {
+	color: var(--color-text);
 	font-size: 2.5rem;
 }

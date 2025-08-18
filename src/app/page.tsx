@@ -1,8 +1,13 @@
+import Link from 'next/link';
+import { PlusIcon } from '@heroicons/react/24/outline';
+
 import type { Task, TimestampMock } from './lib/types';
 
 import TaskList from './components/TaskList';
 
 import styles from './styles/Home.module.css';
+import { getUserFromSession } from './actions/adminAuth';
+import { redirect } from 'next/navigation';
 
 const mockTimestamp = (date: Date): TimestampMock => ({
 	toDate: () => date
@@ -70,10 +75,19 @@ const sampleTasks: Task[] = [
 	}
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+	const user = await getUserFromSession();
+
+	if (!user) redirect('/login');
+
 	return (
 		<div className={styles.homeContainer}>
-			<h2>Your Tasks</h2>
+			<div className={styles.listHeader}>
+				<h2>Your Tasks</h2>
+				<Link href='/tasks/new' className='button'>
+					<PlusIcon width={24} height={24} /> New task
+				</Link>
+			</div>
 			<TaskList tasks={sampleTasks} />
 		</div>
 	);

@@ -4,12 +4,12 @@ import { useActionState, useEffect } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { signupAction } from '@/app/lib/auth';
+import { signupUser } from '@/app/actions/clientAuth';
 
 import styles from '../styles/AuthForm.module.css';
 
 export default function SignUpPage() {
-	const [state, formAction, isPending] = useActionState(signupAction, {
+	const [state, formAction, isPending] = useActionState(signupUser, {
 		success: false,
 		errors: {},
 		message: ''
