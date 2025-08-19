@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 	description: 'Organize your personal tasks with Taskbridge, a simple web-based task manager.'
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang='en'>
 			<body className={inter.className}>

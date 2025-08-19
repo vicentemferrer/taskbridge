@@ -24,56 +24,9 @@ export const signupSchema = z
 		path: ['confirmPassword']
 	});
 
-export const createTaskSchema = z
-	.object({
-		title: z.string().trim().min(1, { error: 'El título es obligatorio' }),
-		description: z
-			.string()
-			.max(2000, { error: 'Máximo 2000 caracteres' })
-			.optional()
-			.or(z.literal(''))
-			.transform((v) => (v === '' ? undefined : v)),
-		status: z.enum(['pending', 'in_progress', 'done'], {
-			error: 'El estado es obligatorio'
-		}),
-		list: z
-			.string()
-			.optional()
-			.or(z.literal(''))
-			.transform((v) => (v === '' ? undefined : v)),
-		ownerId: z.string().trim().min(1, { error: 'El ownerId es obligatorio' }),
-		sharedWith: z
-			.string()
-			.optional()
-			.or(z.literal(''))
-			.transform((s) =>
-				s
-					? s
-							.split(',')
-							.map((x) => x.trim())
-							.filter(Boolean)
-					: []
-			),
-		dueDate: z
-			.string()
-			.optional()
-			.or(z.literal(''))
-			.transform((v) => (v === '' ? undefined : v)),
-		priority: z
-			.string()
-			.optional()
-			.or(z.literal(''))
-			.transform((v) => (v === '' ? undefined : Number(v)))
-			.refine((v) => v === undefined || (Number.isFinite(v) && v >= 1 && v <= 5), {
-				error: 'La prioridad debe ser un número entre 1 y 5'
-			}),
-		completedAt: z
-			.string()
-			.optional()
-			.or(z.literal(''))
-			.transform((v) => (v === '' ? undefined : v))
-	})
-	.refine((data) => !data.completedAt || data.status === 'done', {
-		error: "Solo puedes establecer fecha de finalización si el estado es 'done'",
-		path: ['completedAt']
-	});
+export const createTaskSchema = z.object({
+	title: z.string().trim().min(1, { error: 'Name required' }),
+	description: z.string().max(2000, { error: '2000 characters maximum' }),
+	list: z.string(),
+	dueDate: z.string()
+});

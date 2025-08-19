@@ -1,35 +1,31 @@
 'use server';
 
-import type { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 
 import { createTaskSchema } from '@/app/lib/schemas';
 import type { Task } from '@/app/lib/types';
+
+import { getUserFromSession } from './adminAuth';
 
 type CreateTaskFormState = {
 	success: boolean;
 	errors?: Partial<Record<keyof CreateTaskFormFields, string>>;
 	message?: string;
-	task?: Task;
+	task?: Omit<Task, 'id'>;
 };
 
 type CreateTaskFormFields = {
 	title: string;
-	description?: string;
-	status: 'pending' | 'in_progress' | 'done';
-	list?: string;
-	ownerId: string;
-	sharedWith: string[];
-	dueDate?: string;
-	priority?: number;
-	completedAt?: string;
+	description: string;
+	list: string;
+	dueDate: string;
 };
 
 function toTimestamp(date: Date): Timestamp {
-	return { toDate: () => date } as unknown as Timestamp;
+	return Timestamp.fromDate(date);
 }
 
-function parseDateInput(s?: string): Date | undefined {
-	if (!s) return undefined;
+function parseDateInput(s: string): Date {
 	return new Date(`${s}T00:00:00`);
 }
 
@@ -38,15 +34,10 @@ export async function createTaskAction(
 	formData: FormData
 ): Promise<CreateTaskFormState> {
 	const raw = {
-		title: (formData.get('title') as string) ?? '',
-		description: (formData.get('description') as string) ?? '',
-		status: ((formData.get('status') as string) ?? 'pending') as CreateTaskFormFields['status'],
-		list: (formData.get('list') as string) ?? '',
-		ownerId: (formData.get('ownerId') as string) ?? '',
-		sharedWith: (formData.get('sharedWith') as string) ?? '',
-		dueDate: (formData.get('dueDate') as string) ?? '',
-		priority: (formData.get('priority') as string) ?? '',
-		completedAt: (formData.get('completedAt') as string) ?? ''
+		title: formData.get('title') as string,
+		description: formData.get('description') as string,
+		list: formData.get('list') as string,
+		dueDate: formData.get('dueDate') as string
 	};
 
 	const parsed = createTaskSchema.safeParse(raw);
@@ -61,27 +52,26 @@ export async function createTaskAction(
 		return { success: false, errors };
 	}
 
-	const data = parsed.data as unknown as CreateTaskFormFields;
+	const data = parsed.data as CreateTaskFormFields;
 
 	const now = new Date();
 	const due = parseDateInput(data.dueDate);
-	const completed = parseDateInput(data.completedAt);
+
+	const user = await getUserFromSession();
 
 	// En una implementación real, aquí escribirías en Firestore y usarías el doc.id generado.
 
-	const task: Task = {
-		id: `temp_${Math.random().toString(36).slice(2)}`,
+	const task: Omit<Task, 'id'> = {
 		title: data.title,
 		description: data.description,
-		status: data.status,
+		status: 'pending',
 		list: data.list,
-		ownerId: data.ownerId,
-		sharedWith: data.sharedWith ?? [],
+		ownerId: !!user ? user.uid : '',
+		sharedWith: [],
 		createdAt: toTimestamp(now),
 		updatedAt: toTimestamp(now),
-		dueDate: due ? toTimestamp(due) : undefined,
-		priority: data.priority,
-		completedAt: completed ? toTimestamp(completed) : undefined
+		dueDate: toTimestamp(due),
+		completedAt: undefined
 	};
 
 	// Simulación de persistencia (log). Sustituir por Firestore en el futuro.
