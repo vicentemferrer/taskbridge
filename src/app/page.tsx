@@ -1,85 +1,16 @@
 import Link from 'next/link';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
-import type { Task, TimestampMock } from './lib/types';
+import type { Task } from './lib/types';
+import { getTasks } from './lib/query';
 
 import TaskList from './components/TaskList';
 
 import styles from './styles/Home.module.css';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from './lib/firebase';
-
-// const mockTimestamp = (date: Date): TimestampMock => ({
-// 	toDate: () => date
-// });
-
-// const sampleTasks: Task[] = [
-// 	{
-// 		id: 'task1',
-// 		title: 'Plan weekly team meeting',
-// 		description: 'Prepare agenda, invite attendees, and book a room.',
-// 		status: 'in_progress',
-// 		list: 'Work',
-// 		ownerId: 'user123',
-// 		sharedWith: [],
-// 		createdAt: mockTimestamp(new Date('2024-07-20T10:00:00Z')),
-// 		updatedAt: mockTimestamp(new Date('2024-07-25T14:30:00Z')),
-// 		dueDate: mockTimestamp(new Date('2024-08-01T17:00:00Z'))
-// 	},
-// 	{
-// 		id: 'task2',
-// 		title: 'Buy groceries',
-// 		description: 'Milk, eggs, bread, and vegetables.',
-// 		status: 'pending',
-// 		list: 'Personal',
-// 		ownerId: 'user123',
-// 		sharedWith: [],
-// 		createdAt: mockTimestamp(new Date('2024-07-24T09:00:00Z')),
-// 		updatedAt: mockTimestamp(new Date('2024-07-24T09:00:00Z')),
-// 		dueDate: mockTimestamp(new Date('2024-07-30T19:00:00Z'))
-// 	},
-// 	{
-// 		id: 'task3',
-// 		title: 'Finish report for Q3',
-// 		description: 'Compile all data and write conclusions.',
-// 		status: 'done',
-// 		list: 'Work',
-// 		ownerId: 'user123',
-// 		sharedWith: [],
-// 		sharedWith: ['user456'],
-// 		createdAt: mockTimestamp(new Date('2024-07-01T08:00:00Z')),
-// 		updatedAt: mockTimestamp(new Date('2024-07-22T11:00:00Z')),
-// 		completedAt: mockTimestamp(new Date('2024-07-22T11:00:00Z'))
-// 	},
-// 	{
-// 		id: 'task4',
-// 		title: 'Call plumber',
-// 		description: 'Leaky faucet in the kitchen.',
-// 		status: 'pending',
-// 		list: 'Home',
-// 		ownerId: 'user123',
-// 		sharedWith: [],
-// 		createdAt: mockTimestamp(new Date('2024-07-26T15:00:00Z')),
-// 		updatedAt: mockTimestamp(new Date('2024-07-26T15:00:00Z'))
-// 	},
-// 	{
-// 		id: 'task5',
-// 		title: 'Read "The Great Gatsby"',
-// 		description: 'For book club meeting next month.',
-// 		status: 'in_progress',
-// 		list: 'Personal',
-// 		ownerId: 'user123',
-// 		sharedWith: [],
-// 		createdAt: mockTimestamp(new Date('2024-07-10T18:00:00Z')),
-// 		updatedAt: mockTimestamp(new Date('2024-07-25T09:00:00Z'))
-// 	}
-// ];
 
 export default async function HomePage() {
-	const querySnapshot = await getDocs(collection(db, 'tasks'));
-	querySnapshot.forEach((doc) => {
-		console.log(`${doc.id} => ${doc.toJSON()}`);
-	});
+	const tasks = (await getTasks()) as Task[];
+
 	return (
 		<div className={styles.homeContainer}>
 			<div className={styles.listHeader}>
@@ -88,7 +19,7 @@ export default async function HomePage() {
 					<PlusIcon width={24} height={24} /> New task
 				</Link>
 			</div>
-			<TaskList tasks={[]} />
+			<TaskList tasks={tasks} />
 		</div>
 	);
 }

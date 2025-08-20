@@ -4,6 +4,7 @@ import { Timestamp } from 'firebase/firestore';
 
 import { createTaskSchema } from '@/app/lib/schemas';
 import type { Task } from '@/app/lib/types';
+import { createTask } from '../lib/query';
 
 import { getUserFromSession } from './adminAuth';
 
@@ -70,16 +71,15 @@ export async function createTaskAction(
 		sharedWith: [],
 		createdAt: toTimestamp(now),
 		updatedAt: toTimestamp(now),
-		dueDate: toTimestamp(due),
-		completedAt: undefined
+		dueDate: toTimestamp(due)
 	};
 
+	await createTask(task);
+
 	// Simulación de persistencia (log). Sustituir por Firestore en el futuro.
-	console.log('Nueva tarea creada (simulada):', task);
 
 	return {
 		success: true,
-		message: 'Tarea creada correctamente.',
-		task
+		message: 'Tarea creada correctamente.'
 	};
 }

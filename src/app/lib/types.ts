@@ -8,12 +8,8 @@ export interface Task {
 	list: string;
 	ownerId: string;
 	sharedWith: string[];
-	createdAt: Timestamp | TimestampMock;
-	updatedAt: Timestamp | TimestampMock;
-	dueDate: Timestamp | TimestampMock;
-	completedAt?: Timestamp | TimestampMock;
+	createdAt: Timestamp;
+	updatedAt: Timestamp;
+	dueDate?: Timestamp;
+	completedAt?: Timestamp;
 }
-
-export type TimestampMock = {
-	toDate: () => Date;
-};
