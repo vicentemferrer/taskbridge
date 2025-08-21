@@ -8,8 +8,13 @@ import TaskList from './components/TaskList';
 
 import styles from './styles/Home.module.css';
 
+interface ITasksDashboard {
+	mine: Task[];
+	shared: Task[];
+}
+
 export default async function HomePage() {
-	const tasks = (await getTasks()) as Task[];
+	const tasks = (await getTasks()) as ITasksDashboard;
 
 	return (
 		<div className={styles.homeContainer}>
@@ -19,7 +24,15 @@ export default async function HomePage() {
 					<PlusIcon width={24} height={24} /> New task
 				</Link>
 			</div>
-			<TaskList tasks={tasks} />
+			<TaskList tasks={tasks.mine} />
+			{tasks.shared && tasks.shared.length > 0 && (
+				<>
+					<div className={styles.listHeader}>
+						<h2>Shared Tasks</h2>
+					</div>
+					<TaskList tasks={tasks.shared} />
+				</>
+			)}
 		</div>
 	);
 }
