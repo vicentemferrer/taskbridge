@@ -1,4 +1,5 @@
 import { CalendarIcon, ClockIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 import type { Task } from '@/app/lib/types';
 
@@ -25,7 +26,9 @@ export default function TaskComponent({ task }: Props) {
 	return (
 		<div className={styles.taskCard}>
 			<div className={styles.taskHeader}>
-				<h3 className={styles.taskTitle}>{task.title}</h3>
+				<Link href={`/tasks/${task.id}`} className={styles.taskTitleLink}>
+					<h3 className={styles.taskTitle}>{task.title}</h3>
+				</Link>
 				<span className={`${styles.taskStatus} ${getStatusClass(task.status)}`}>
 					{task.status.replace(/_/g, ' ')}
 				</span>

@@ -1,0 +1,137 @@
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+.backLink {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--color-details);
+	text-decoration: none;
+	margin-bottom: 2rem;
+	font-weight: 500;
+}
+
+.backLink:hover {
+	text-decoration: underline;
+}
+
+.taskCard {
+	background-color: white;
+	border-radius: 12px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+	padding: 2.5rem;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 1.5rem;
+	gap: 1rem;
+}
+
+.title {
+	font-size: 2rem;
+	font-weight: bold;
+	color: var(--color-text);
+	margin: 0;
+	flex: 1;
+}
+
+.status {
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	font-size: 0.9rem;
+	font-weight: bold;
+	text-transform: capitalize;
+	flex-shrink: 0;
+}
+
+.statusPending {
+	background-color: var(--color-secondary);
+	color: var(--color-text);
+}
+
+.statusInProgress {
+	background-color: var(--color-details);
+	color: white;
+}
+
+.statusDone {
+	background-color: var(--color-primary);
+	color: white;
+}
+
+.description {
+	font-size: 1.1rem;
+	line-height: 1.6;
+	color: #555;
+	margin-bottom: 2rem;
+	white-space: pre-wrap;
+}
+
+.metaGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+
+.metaItem {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 1rem;
+	background-color: #f8f9fa;
+	border-radius: 8px;
+}
+
+.metaItem svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	color: var(--color-details);
+	flex-shrink: 0;
+}
+
+.metaLabel {
+	font-weight: 600;
+	color: var(--color-text);
+}
+
+.metaValue {
+	color: #666;
+}
+
+.sharedList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+}
+
+.sharedUser {
+	background-color: var(--color-details);
+	color: white;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+	font-size: 0.8rem;
+}
+
+.notFound {
+	text-align: center;
+	padding: 4rem 2rem;
+}
+
+.notFound h1 {
+	font-size: 2rem;
+	color: var(--color-text);
+	margin-bottom: 1rem;
+}
+
+.notFound p {
+	color: #666;
+	margin-bottom: 2rem;
+}

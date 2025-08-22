@@ -3,18 +3,13 @@ import type { Timestamp } from 'firebase/firestore';
 export interface Task {
 	id: string;
 	title: string;
-	description?: string;
+	description: string;
 	status: 'pending' | 'in_progress' | 'done';
-	list?: string;
+	list: string;
 	ownerId: string;
-	sharedWith?: string[];
-	createdAt: Timestamp | TimestampMock;
-	updatedAt: Timestamp | TimestampMock;
-	dueDate?: Timestamp | TimestampMock;
-	priority?: number;
-	completedAt?: Timestamp | TimestampMock;
+	sharedWith: string[];
+	createdAt: Timestamp;
+	updatedAt: Timestamp;
+	dueDate?: Timestamp;
+	completedAt?: Timestamp;
 }
-
-export type TimestampMock = {
-	toDate: () => Date;
-};

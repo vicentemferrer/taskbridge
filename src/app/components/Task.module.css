@@ -16,6 +16,17 @@
 	align-items: center;
 }
 
+.taskTitleLink {
+	text-decoration: none;
+	color: inherit;
+	flex: 1;
+}
+
+.taskTitleLink:hover .taskTitle {
+	color: var(--color-details);
+	text-decoration: underline;
+}
+
 .taskTitle {
 	font-size: 1.25rem;
 	font-weight: bold;
