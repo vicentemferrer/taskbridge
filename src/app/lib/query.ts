@@ -31,19 +31,24 @@ export async function getTasks() {
 		};
 	} catch (err) {
 		if (err instanceof Error || err instanceof FirebaseError) {
-			throw new Error(`getTasks failed: ${err.message}`);
+			console.error(`getTasks failed: ${err.message}`);
 		}
 	}
 }
 
 export async function getSingleTask(id: string) {
 	try {
+		const user = await getUserFromSession();
+
 		const docSnapshot = await getDoc(doc(db, 'tasks', id));
 
-		return { ...docSnapshot.data() };
+		const isAble =
+			docSnapshot.get('ownerId') === user?.uid || docSnapshot.get('sharedWith').includes(user?.uid);
+
+		return isAble && { ...docSnapshot.data() };
 	} catch (err) {
 		if (err instanceof Error || err instanceof FirebaseError) {
-			throw new Error(`getSingleTask failed: ${err.message}`);
+			console.error(`getSingleTask failed: ${err.message}`);
 		}
 	}
 }
@@ -68,10 +73,12 @@ export async function getUserLabel(uid: string) {
 
 		const notMyUser = await auth.getUser(uid);
 
-		return notMyUser.displayName;
+		return notMyUser.displayName as string;
 	} catch (err) {
 		if (err instanceof Error || err instanceof FirebaseError) {
-			throw new Error(`getOwnerLabel failed: ${err.message}`);
+			console.error(`getUserLabel failed: ${err.message}`);
 		}
+
+		return '';
 	}
 }

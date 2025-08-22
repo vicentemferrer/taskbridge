@@ -43,7 +43,10 @@ export default async function TaskDetailPage({ params }: Props) {
 
 	const owner = await getUserLabel(task.ownerId);
 
-	const sharedWith = task.sharedWith && (await Promise.all(task.sharedWith.map(getUserLabel)));
+	const sharedWith =
+		task.sharedWith &&
+		task.sharedWith.length > 0 &&
+		(await Promise.all(task.sharedWith.map(getUserLabel)));
 
 	return (
 		<div className={styles.container}>
@@ -147,7 +150,7 @@ export default async function TaskDetailPage({ params }: Props) {
 						</div>
 					)}
 
-					{sharedWith && sharedWith.length > 0 && (
+					{sharedWith && (
 						<div className={styles.metaItem}>
 							<UsersIcon />
 							<div>
