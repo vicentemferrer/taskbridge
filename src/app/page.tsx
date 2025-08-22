@@ -13,6 +13,8 @@ interface ITasksDashboard {
 	shared: Task[];
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
 	const tasks = (await getTasks()) as ITasksDashboard;
 
