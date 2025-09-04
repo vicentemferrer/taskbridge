@@ -43,10 +43,6 @@ export default function LoginPage() {
 							<p className={styles.errorMessage}>{state.errors.password}</p>
 						)}
 					</div>
-					<div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
-						<input type='checkbox' id='rememberMe' name='rememberMe' />
-						<label htmlFor='rememberMe'>Recordarme</label>
-					</div>
 					<button type='submit' className={styles.submitButton} disabled={isPending}>
 						{isPending ? 'Logging in...' : 'Login'}
 					</button>

@@ -1,4 +1,15 @@
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import {
+	collection,
+	deleteField,
+	doc,
+	getDoc,
+	getDocs,
+	query,
+	serverTimestamp,
+	setDoc,
+	updateDoc,
+	where
+} from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 
 import { db } from './firebase';
@@ -61,6 +72,24 @@ export async function createTask(data: Omit<Task, 'id'>) {
 	} catch (err) {
 		if (err instanceof Error || err instanceof FirebaseError) {
 			throw new Error(`createTask failed: ${err.message}`);
+		}
+	}
+}
+
+export async function updateTask(id: string, fields: Partial<Omit<Task, 'id'>>) {
+	try {
+		const taskRef = doc(collection(db, 'tasks'), id);
+
+		await updateDoc(taskRef, {
+			...fields,
+			updatedAt: serverTimestamp(),
+			...(fields?.status === 'done'
+				? { completedAt: serverTimestamp() }
+				: { completedAt: deleteField() })
+		});
+	} catch (err) {
+		if (err instanceof Error || err instanceof FirebaseError) {
+			throw new Error(`updateTask failed: ${err.message}`);
 		}
 	}
 }

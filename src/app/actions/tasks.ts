@@ -4,15 +4,22 @@ import { Timestamp } from 'firebase/firestore';
 
 import { createTaskSchema } from '@/app/lib/schemas';
 import type { Task } from '@/app/lib/types';
-import { createTask } from '../lib/query';
+import { createTask, updateTask } from '../lib/query';
 
 import { getUserFromSession } from './adminAuth';
+import { revalidatePath } from 'next/cache';
 
 type CreateTaskFormState = {
 	success: boolean;
 	errors?: Partial<Record<keyof CreateTaskFormFields, string>>;
 	message?: string;
 	task?: Omit<Task, 'id'>;
+};
+
+type UpdateStatusState = {
+	success: boolean;
+	error?: string;
+	newStatus?: Task['status'];
 };
 
 type CreateTaskFormFields = {
@@ -60,8 +67,6 @@ export async function createTaskAction(
 
 	const user = await getUserFromSession();
 
-	// En una implementación real, aquí escribirías en Firestore y usarías el doc.id generado.
-
 	const task: Omit<Task, 'id'> = {
 		title: data.title,
 		description: data.description,
@@ -76,10 +81,46 @@ export async function createTaskAction(
 
 	await createTask(task);
 
-	// Simulación de persistencia (log). Sustituir por Firestore en el futuro.
-
 	return {
 		success: true,
 		message: 'Tarea creada correctamente.'
 	};
+}
+
+function getNextStatus(currentStatus: Task['status']): Task['status'] {
+	switch (currentStatus) {
+		case 'pending':
+			return 'in_progress';
+		case 'in_progress':
+			return 'done';
+		case 'done':
+			return 'pending';
+		default:
+			return 'pending';
+	}
+}
+
+export async function updateTaskStatusAction(
+	taskId: string,
+	currentStatus: Task['status']
+): Promise<UpdateStatusState> {
+	try {
+		const newStatus = getNextStatus(currentStatus);
+
+		await updateTask(taskId, { status: newStatus });
+
+		revalidatePath(`/tasks/${taskId}`);
+		revalidatePath('/');
+
+		return {
+			success: true,
+			newStatus
+		};
+	} catch (err) {
+		console.error('Error actualizando status de tarea:', err);
+		return {
+			success: false,
+			error: err
+		};
+	}
 }
